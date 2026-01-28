@@ -76,8 +76,13 @@ Add to your `claude_desktop_config.json`:
   "command": "python3",
   "args": [
     "/absolute/path/to/mcp_server_framework/mcp_servers/mcp_stdio_mac_tts_mcp_server/mac_tts_mcp_server.py"
-  ]
+  ],
+  "env": {
+    "PYTHONPATH": "/absolute/path/to/mcp_server_framework"
+  }
 }
+```
+**Note:** `PYTHONPATH` is set to the project root to ensure the server script can import shared modules and dependencies from within the framework.
 ```
 
 ### Using a Client
