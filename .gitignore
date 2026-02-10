@@ -194,3 +194,7 @@ cython_debug/
 .cursorindexingignore
 
 chroma_langchain_db/.DS_Store
+.DS_Store
+chroma_langchain_db/
+check_agent.py
+agent_methods.txt

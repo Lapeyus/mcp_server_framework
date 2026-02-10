@@ -1,6 +1,6 @@
 import asyncio
 import json
-# import logging
+import logging
 import inspect # for dynamic function discovery
 import os # For path manipulation
 import importlib.util # For dynamic module loading

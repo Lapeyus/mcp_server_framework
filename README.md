@@ -2,20 +2,35 @@
 
 This repository provides a framework and examples for building Model Context Protocol (MCP) servers and clients using Python and Google's Agent Development Kit (ADK).
 
-It demonstrates how to expose local tools and services (like ChromaDB, Text-to-Speech) as MCP servers that can be consumed by MCP-compliant clients (like Claude, IDEs, or custom agents).
+It demonstrates how to expose local tools and services (like ChromaDB, Text-to-Speech, Mind Mapping) as MCP servers that can be consumed by MCP-compliant clients (like Claude, IDEs, or custom agents).
+
+## ✨ Features
+
+This framework includes ready-to-use MCP servers for:
+
+- **🗄️ ChromaDB Integration** - Vector database operations for semantic search and embeddings
+- **🔊 Mac Text-to-Speech** - Native macOS speech synthesis for audio output
+- **🧠 Mind Mapping** - Convert markdown to interactive HTML mind maps with Markmap
+- **📡 SSE Transport** - Server-Sent Events for real-time streaming
+- **🌐 HTTP Streaming** - Streamable HTTP for web-based integrations
+
 
 ## 📂 Repository Structure
 
-- **`mcp_servers/`**: Contains various MCP server implementations.
-  - **`mcp_sse_server/`**: An MCP server using Server-Sent Events (SSE) for transport.
-  - **`mcp_stdio_chromadb_server/`**: Exposes ChromaDB operations via standard input/output (stdio).
-  - **`mcp_stdio_mac_tts_mcp_server/`**: Exposes Mac's native Text-to-Speech via stdio.
-  - **`mcp_streamablehttp_agent/`**: A server implementation using streamable HTTP.
+- **`mcp_servers/`**: MCP server implementations organized by transport type.
+  - **`stdio/`**: Standard I/O transport servers (local execution)
+    - **`chromadb/`**: Vector database for semantic search and embeddings
+    - **`mac_tts/`**: Native macOS text-to-speech synthesis
+    - **`mindmap/`**: Markdown to interactive HTML mind maps
+  - **`sse/`**: Server-Sent Events transport servers (real-time streaming)
+    - **`filesystem/`**: Read-only filesystem access
+  - **`streamablehttp/`**: HTTP streaming transport servers (web APIs)
+    - **`agent/`**: General-purpose agent server
 
-- **`mcp_server_client/`**: Contains client implementations to connect to the above servers.
-  - **`sse/`**: Client for the SSE server.
-  - **`stdio/`**: Client for stdio-based servers.
-  - **`streamablehttp/`**: Client for the streamable HTTP agent.
+- **`mcp_server_client/`**: Client implementations for connecting to MCP servers.
+  - **`sse/`**: Client for SSE-based servers
+  - **`stdio/`**: Client for stdio-based servers
+  - **`streamablehttp/`**: Client for HTTP streaming servers
 
 ## 🚀 Installation
 
@@ -83,7 +98,46 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 **Note:** `PYTHONPATH` is set to the project root to ensure the server script can import shared modules and dependencies from within the framework.
+
+### Running the Mindmap Server (Stdio)
+
+Convert markdown content into interactive HTML mind maps using Markmap.
+
+**1. Direct Test (Generate a sample mindmap):**
+```bash
+python mcp_servers/mcp_stdio_mindmap_mcp_server/tool_modules/markmapper.py
+# This will create test_markmap_corrected.html - open it in a browser
 ```
+
+**2. Configure in Claude Desktop:**
+Add to your `claude_desktop_config.json`:
+```json
+"mindmap": {
+  "command": "python3",
+  "args": [
+    "/absolute/path/to/mcp_server_framework/mcp_servers/mcp_stdio_mindmap_mcp_server/mcp_server.py"
+  ],
+  "env": {
+    "PYTHONPATH": "/absolute/path/to/mcp_server_framework"
+  }
+}
+```
+
+**3. Example Usage:**
+Once configured, you can ask Claude to create mind maps from markdown:
+```markdown
+# Project Planning
+- Phase 1: Research
+  - Market Analysis
+  - Competitor Study
+- Phase 2: Development
+  - Backend API
+  - Frontend UI
+- Phase 3: Launch
+  - Testing
+  - Deployment
+```
+
 
 ### Using a Client
 

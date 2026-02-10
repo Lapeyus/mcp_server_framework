@@ -6,15 +6,21 @@ from langchain_experimental.text_splitter import SemanticChunker
 from langchain_openai.embeddings import OpenAIEmbeddings
 import json
 
-embeddings = OllamaEmbeddings(
-        model="nomic-embed-text:latest",
-)
+_embeddings = None
+_vector_store = None
 
-vector_store = Chroma(
-    collection_name="example_collection",
-    embedding_function=embeddings,  
-    persist_directory="./chroma_langchain_db",
-)
+def _get_vector_store():
+    global _embeddings, _vector_store
+    if _vector_store is None:
+        _embeddings = OllamaEmbeddings(
+            model="nomic-embed-text:latest",
+        )
+        _vector_store = Chroma(
+            collection_name="example_collection",
+            embedding_function=_embeddings,  
+            persist_directory="./chroma_langchain_db",
+        )
+    return _vector_store
 
 def retrieve_documents(query: str, k: int) -> str: #, filter: dict         filter (dict): A dictionary to filter documents by metadata.
     """
@@ -28,12 +34,10 @@ def retrieve_documents(query: str, k: int) -> str: #, filter: dict         filte
         str: A JSON string representing a list of retrieved documents.
              Each document is a dictionary with 'page_content', 'metadata', and 'id'.
     """
-    global vector_store
-    if vector_store is None:
-        raise RuntimeError("Vector store not initialized. Call initialize_chroma_db first.")
+    store = _get_vector_store()
     
     try:
-        retriever = vector_store.as_retriever(search_kwargs={"k": k}) #, "filter": {}
+        retriever = store.as_retriever(search_kwargs={"k": k}) #, "filter": {}
         retrieved_documents = retriever.invoke(query)
         
         # Convert Document objects to a list of dictionaries
