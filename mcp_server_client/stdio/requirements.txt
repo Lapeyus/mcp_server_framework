@@ -1,13 +1,1 @@
-google-adk>=1.24.1
-mcp>=1.23.0
-unstructured
-onnxruntime
-python-dotenv==1.1.0
-litellm==1.72.1
-langchain-community
-langchain-ollama
-langchain-chroma
-langchain-experimental
-langchain-openai
-pydantic>=2.0.0
-pydantic-core>=2.0.0
+-r ../../requirements.txt

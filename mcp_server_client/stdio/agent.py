@@ -3,9 +3,15 @@ import os
 import sys
 import asyncio
 from dotenv import load_dotenv
+from google.genai import types
 
 from google.adk.agents.llm_agent import LlmAgent
-from google.adk.tools.mcp_tool.mcp_toolset import McpToolset, StdioServerParameters, StdioConnectionParams
+from google.adk.runners import InMemoryRunner
+from google.adk.tools.mcp_tool.mcp_toolset import (
+    MCPToolset,
+    StdioConnectionParams,
+    StdioServerParameters,
+)
 from google.adk.models.lite_llm import LiteLlm
 
 # --- 1. CONFIGURATION ---
@@ -70,7 +76,7 @@ def initialize_tools():
         if srv.get("enabled", False):
             print(f"[*] Initializing {srv['name']} server...")
             mcp_tools.append(
-                McpToolset(
+                MCPToolset(
                     connection_params=StdioConnectionParams(
                         server_params=StdioServerParameters(
                             command=srv["command"],
@@ -82,9 +88,6 @@ def initialize_tools():
                 )
             )
     return mcp_tools
-
-from google.adk.runners import InMemoryRunner
-from google.genai import types
 
 # --- 4. AGENT INITIALIZATION ---
 # We use a lazy initialization pattern to avoid execution on import
@@ -124,7 +127,8 @@ if __name__ == "__main__":
             all_tools = await root_agent.canonical_tools()
             print(f"[*] Total tools available: {len(all_tools)}")
             for t in all_tools:
-                print(f"    - {t.name}: {t.description[:60].replace('\n', ' ')}...")
+                description = t.description[:60].replace("\n", " ")
+                print(f"    - {t.name}: {description}...")
                 # Also print the schema for debugging
                 try:
                     # In newer ADK, _get_declaration() is the standard way to get the Gemini schema

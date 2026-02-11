@@ -43,7 +43,7 @@ def get_cwd() -> str:
 
 def main() -> None:
     try:
-        mcp.run(transport="sse")
+        mcp.run(transport="streamable-http")
     except KeyboardInterrupt:
         print("\nServer shutting down gracefully...")
     except Exception as e:

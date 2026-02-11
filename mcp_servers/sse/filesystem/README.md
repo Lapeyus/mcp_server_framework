@@ -1,8 +1,13 @@
-This agent connects to a local MCP server via sse.
+# SSE Filesystem Server
 
-To run this agent, start the local MCP server first by :
+Filesystem MCP server over SSE transport.
+
+## Run
 
 ```bash
-uv run filesystem_server.py
+python mcp_servers/sse/filesystem/filesystem_server.py
 ```
 
+## Endpoint
+
+- `http://localhost:3000/sse`

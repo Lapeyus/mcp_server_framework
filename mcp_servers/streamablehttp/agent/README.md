@@ -1,8 +1,15 @@
-This agent connects to a local MCP server via sse.
+# Streamable HTTP Filesystem Server
 
-To run this agent, start the local MCP server first by :
+This server exposes filesystem helper tools over streamable HTTP.
+
+## Run
 
 ```bash
-uv run filesystem_server.py
+python mcp_servers/streamablehttp/agent/server.py
 ```
 
+Endpoint:
+- `http://localhost:3000/mcp`
+
+Compatibility:
+- `filesystem_server.py` forwards to `server.py`.

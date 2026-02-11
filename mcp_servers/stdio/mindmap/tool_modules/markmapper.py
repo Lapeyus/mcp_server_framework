@@ -1,5 +1,3 @@
-import os
-import sys
 from typing import Optional
 
 # You can embed the template directly, or load from a file. Here it’s embedded for clarity.

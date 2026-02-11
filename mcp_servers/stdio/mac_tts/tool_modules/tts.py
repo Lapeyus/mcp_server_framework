@@ -1,5 +1,4 @@
 import subprocess
-import shlex
 import os
 from typing import Optional
 
@@ -32,29 +31,24 @@ def text_to_speech_mac(text_to_speak: str, voice: Optional[str] = None, output_f
     try:
         command = ["say"]
 
-        # if voice:
-        #     command.extend(["-v", voice]) #
+        if voice:
+            command.extend(["-v", voice])
 
         if output_file_path:
-            # Ensure the directory for the output file exists if a path is given
             output_dir = os.path.dirname(output_file_path)
             if output_dir and not os.path.exists(output_dir):
                 try:
                     os.makedirs(output_dir, exist_ok=True)
                 except OSError as e:
                     return {"status": "error", "error_message": f"Could not create directory for output file: {e}"}
-            
-            # shlex.quote output_file_path to handle spaces or special characters
-            command.extend(["-o", shlex.quote(output_file_path)])
-        
-        # text_to_speak will be passed via stdin
-        
-        # Join command for logging or debugging, but run as a list for subprocess
-        # logging.info(f"Executing TTS command: {' '.join(command)}") # If logging is set up
+
+            command.extend(["-o", output_file_path])
 
         process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # Pass text_to_speak via stdin, encoded as UTF-8
-        stdout, stderr = process.communicate(input=text_to_speak.encode('utf-8'), timeout=30) # Timeout to prevent hanging
+        stdout, stderr = process.communicate(
+            input=text_to_speak.encode("utf-8"),
+            timeout=30,
+        )
 
         if process.returncode == 0:
             if output_file_path:
@@ -72,6 +66,7 @@ def text_to_speech_mac(text_to_speak: str, voice: Optional[str] = None, output_f
     except FileNotFoundError:
         return {"status": "error", "error_message": "'say' command not found. This function is for macOS only."}
     except subprocess.TimeoutExpired:
+        process.kill()
         return {"status": "error", "error_message": "'say' command timed out."}
     except Exception as e:
         return {"status": "error", "error_message": f"An unexpected error occurred: {str(e)}"}
